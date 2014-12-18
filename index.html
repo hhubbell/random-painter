@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            button {
+                font-family: monospace;
+                border: solid 1px black;
+                background-color: white;
+                padding: 5px;
+            }
+            canvas {
+                vertical-align: top;
+            }
+            label {
+                display: inline-block;
+                font-family: monospace;
+                width: 10em;
+            }
+            main {
+                max-width: 550px;
+                margin: auto;
+                text-align: center;
+            }
+            .info {
+                vertical-align: top;
+                text-align: left;
+                display: inline-block;
+                min-width: 200px;
+            }
+            .subinfo {
+                display: block;
+                margin: 5px;
+                padding: 5px;
+            }
+            #options {
+                border: solid 1px black;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <canvas id='screen'></canvas>
+            <div class='info'>
+                <div id='options' class='subinfo'>
+                    <button id='pause' value='true'>Pause</button>
+                    <br>
+                    <label for='color'>Change Color:</label>
+                    <input type='checkbox' id='color' checked>
+                    <br>
+                    <label for='smooth'>Smooth Color:</label>
+                    <input type='checkbox' id='smooth' checked>
+                    <br>
+                    <label for='resize'>Resize:</label>
+                    <input type='checkbox' id='resize'>
+                    <br>
+                    <label for='spin'>Spin:</label>
+                    <input type='checkbox' id='spin'>
+                </div>
+                <div id='data' class='subinfo'>
+                    <code>HEX: <span id='current-color'></span></code>
+                    <br>
+                    <code>RGB: <span id='rgb-color'></span></code>
+                    <br>
+                    <code>R: <span id='radius'></span></code>
+                    <br>
+                    <code>X: <span id='xcoord'></span></code>
+                    <br>
+                    <code>Y: <span id='ycoord'></span></code>
+                </div>
+            </div>
+        </main>
+        <script type='application/javascript' src='main.js'></script>
+    </body>
+</html>
