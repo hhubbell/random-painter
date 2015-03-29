@@ -1,4 +1,19 @@
+/*
+ * Filename:    main.js
+ * Author:      Harrison Hubbell
+ * Date:        December 18, 2014
+ * Description: Control the brush of the random painter
+ */
 
+/**
+ * spin_draw: Stamp a circle on the canvas that is opening.
+ * @param ctx:      The context to draw on
+ * @param r:        Cirle radius
+ * @param c:        Array of coordinates ([x, y])
+ * @param start:    Last iteration's end point
+ * @param distance: Arc length (radians)
+ * @return:         Total arc length (radians) 
+ */
 function spin_draw(ctx, r, c, start, distance) {
     var x = c[0];
     var y = c[1];
@@ -16,6 +31,12 @@ function spin_draw(ctx, r, c, start, distance) {
     return end;
 }
 
+/**
+ * solid_draw: Stamp a solid circle on the canvas
+ * @param ctx:  The context to draw on
+ * @param r:    Circle radius
+ * @param c:    Array of coordinates ([x, y])
+ */
 function solid_draw(ctx, r, c) {
     var x = c[0];
     var y = c[1];
@@ -26,13 +47,21 @@ function solid_draw(ctx, r, c) {
     ctx.closePath();
 }
 
-function move(ctx, r, old, neg_allow) {
+/**
+ * move: randomly generate the new location for the circle
+ * @param ctx:          The context
+ * @param r:            Circle radius
+ * @param old:          Current location
+ * @optional no_neg:    Is the circle allowed to be drawn off the canvas
+ * @return:             New coordinates ([x, y])
+ */
+function move(ctx, r, old, no_neg) {
     var newc = [];
 
     newc[0] = old[0] + ((Math.floor(Math.random() * 2) === 1) ? 1 : -1);
     newc[1] = old[1] + ((Math.floor(Math.random() * 2) === 1) ? 1 : -1);
 
-    if (neg_allow) {
+    if (no_neg) {
         if (newc[0] + r >= ctx.canvas.clientWidth || newc[0] - r <= 0) {
             newc[0] = old[0];
         }
@@ -44,10 +73,23 @@ function move(ctx, r, old, neg_allow) {
     return newc;
 }
 
+/**
+ * size: randomly generate the circle radius
+ * @param max:  Max radius
+ * @return:     New radius
+ */
 function size(max) {
     return Math.floor(Math.random() * max)
 }
 
+/**
+ * pulse: Change the background color of an element from white
+ * to the current circle color
+ * @param el:   Element to color
+ * @param to:   Color to move to
+ * @param dir:  Moving towards or away from the color
+ * @return:     Direction to move next iteration
+ */
 function pulse(el, to, dir) {
     var SMOOTHING = 1;
     var RGB_RE = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(1|0\.\d+))?\)$/;
@@ -92,6 +134,12 @@ function pulse(el, to, dir) {
     return dir;
 }
 
+/**
+ * show: Log data to HUD
+ * @param c:    Coordinates ([x, y])
+ * @param r:    Radius 
+ * @param l:    Color (hex)
+ */
 function show(c, r, l) {
     var col = rgb(l);
     var str = '(' + col.r + ', ' + col.g + ', ' + col.b + ')';
@@ -103,6 +151,11 @@ function show(c, r, l) {
     document.getElementById('rgb-color').innerHTML = str;
 }
 
+/**
+ * rgb: Convert a hexidecimal color value to an RGB array
+ * @param val:  Hexidecimal color string
+ * @return:     RGB color dictionary
+ */
 function rgb(val) {
     var num = val.split('#')[1];
     var r = parseInt(num.slice(0,2), 16);
@@ -111,15 +164,29 @@ function rgb(val) {
     return {r: r, g: g, b: b};
 }
 
+/**
+ * hex: Convert an integer between 0 and 255 to its hexidecimal val
+ * @param val:  Color integer
+ * @return:     Hexidecimal value
+ */
 function hex(val) {
     var hex_rep = val.toString(16);
     return (hex_rep.length === 1) ? '0' + hex_rep : hex_rep;
 }
 
+/**
+ * random_hex: generate a random hexidecimal color.
+ * @return:     Hexidecimal value
+ */
 function random_hex() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
+/**
+ * smooth_hex: generate a hexidecimal color based on a seed.
+ * @param start:    Start color to base next color on
+ * @return:         New hexidecimal value
+ */
 function smooth_hex(start) {
     var SMOOTHING = 5;
 
