@@ -58,12 +58,12 @@ function pulse(el, to, dir) {
     var tr = parseInt(to.slice(0,2), 16);
     var tg = parseInt(to.slice(2,4), 16);
     var tb = parseInt(to.slice(4,6), 16);
-    var fr = null;
-    var fg = null;
-    var fb = null;
-    var rh = null;
-    var bh = null;
-    var gh = null;
+    var fr;
+    var fg;
+    var fb;
+    var rh;
+    var bh;
+    var gh;
 
     if (from) {
         from = from.slice(1,4);
@@ -117,23 +117,25 @@ function show(c, r, l) {
     document.getElementById('current-color').innerHTML = l;
 }
 
-function hex() {
+function hex(val) {
+    var hex_rep = val.toString(16);
+    return (hex_rep.length === 1) ? '0' + hex_rep : hex_rep;
+}
+
+function random_hex() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
 function smooth_hex(start) {
     var SMOOTHING = 5;
 
-    var rbg_string = null;
-    var hex = start.split('#')[1];
-    var r = parseInt(hex.slice(0,2), 16);
-    var g = parseInt(hex.slice(2,4), 16);
-    var b = parseInt(hex.slice(4,6), 16);
+    var hex_split = start.split('#')[1];
+    var r = parseInt(hex_split.slice(0,2), 16);
+    var g = parseInt(hex_split.slice(2,4), 16);
+    var b = parseInt(hex_split.slice(4,6), 16);
     var dir = (Math.floor(Math.random() * 2) === 1) ? 1 : -1;
     var dlt = dir * Math.floor(Math.random() * SMOOTHING);
-    var rh = null;
-    var gh = null;
-    var bh = null;
+    var rbg_string;    
 
     switch (Math.floor(Math.random() * 3)) {
         case 0:
@@ -153,18 +155,10 @@ function smooth_hex(start) {
             break;
     }
 
-    rh = r.toString(16);
-    gh = g.toString(16);
-    bh = b.toString(16);
-
-    rh = (rh.length === 1) ? '0' + rh : rh;
-    gh = (gh.length === 1) ? '0' + gh : gh;
-    bh = (bh.length === 1) ? '0' + bh : bh;
-
     rgb_string = '(' + r + ', ' + g + ', ' + b + ')';
     document.getElementById('rgb-color').innerHTML = rgb_string;
 
-    return '#' + rh + gh + bh;
+    return '#' + hex(r) + hex(g) + hex(b);
 }
 
 (function () {
@@ -186,7 +180,7 @@ function smooth_hex(start) {
     var playing = (pause_button.value === 'true');
 
     var start = 0;
-    var color = hex();
+    var color = random_hex();
     var rad = RADIUS;
     var pulse_dir = [-1, -1, -1];
     var interval = Math.PI * 2 / MS_TIME;
@@ -226,7 +220,7 @@ function smooth_hex(start) {
                 start = spin_draw(ctx, rad, coord, start, interval);
 
                 if (start > Math.PI * 2) {
-                    color = hex();
+                    color = random_hex();
                     start = 0;
                 }
             } else {
@@ -236,12 +230,15 @@ function smooth_hex(start) {
             show(coord, rad, color);
             coord = move(ctx, RADIUS, coord, true);
 
-            if (change_size) rad = size(RADIUS);
+            if (change_size) {
+                rad = size(RADIUS);
+            }
+            
             if (change_color) {
                 if (smooth_color) {
                     color = smooth_hex(color);
                 } else {
-                    color = hex();
+                    color = random_hex();
                 }
             }
 
