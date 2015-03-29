@@ -52,69 +52,63 @@ function pulse(el, to, dir) {
     var SMOOTHING = 1;
     var RGB_RE = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(1|0\.\d+))?\)$/;
 
-    var to = to.split('#')[1];
+    var to = rgb(to);
     var from = el.style.backgroundColor.match(RGB_RE);
     var all_done = false;
-    var tr = parseInt(to.slice(0,2), 16);
-    var tg = parseInt(to.slice(2,4), 16);
-    var tb = parseInt(to.slice(4,6), 16);
     var fr;
     var fg;
     var fb;
-    var rh;
-    var bh;
-    var gh;
 
-    if (from) {
-        from = from.slice(1,4);
-    } else {
-        from = [255, 255, 255];
-    }
+    from = (from) ? from.slice(1,4) : [255, 255, 255];
 
     fr = parseInt(from[0]);
     fg = parseInt(from[1]);
     fb = parseInt(from[2]);
 
-    all_done = (fr <= tr || fr >= 255) &&
-                (fg <= tg || fg >= 255) &&
-                (fb <= fb || fb >= 255);
+    all_done = (fr <= to.r || fr >= 255) &&
+                (fg <= to.g || fg >= 255) &&
+                (fb <= to.b || fb >= 255);
 
-    if (fr > tr && dir[0] === -1 || fr < 255 && dir[0] === 1) {
+    if (fr > to.r && dir[0] === -1 || fr < 255 && dir[0] === 1) {
         fr += SMOOTHING * dir[0];
     } else if (all_done) {
         dir[0] *= -1;
     }
 
-    if (fg > tg && dir[1] === -1 || fg < 255 && dir[1] === 1) {
+    if (fg > to.g && dir[1] === -1 || fg < 255 && dir[1] === 1) {
         fg += SMOOTHING * dir[1];
     } else if (all_done) {
         dir[1] *= -1;
     }
 
-    if (fb > tb && dir[2] === -1 || fb < 255 && dir[2] === 1) {
+    if (fb > to.b && dir[2] === -1 || fb < 255 && dir[2] === 1) {
         fb += SMOOTHING * dir[2];
     } else if (all_done) {
         dir[2] *= -1;
     }
 
-    rh = fr.toString(16);
-    gh = fg.toString(16);
-    bh = fb.toString(16);
-
-    rh = (rh.length === 1) ? '0' + rh : rh;
-    gh = (gh.length === 1) ? '0' + gh : gh;
-    bh = (bh.length === 1) ? '0' + bh : bh;
-
-    el.style.backgroundColor = '#' + rh + gh + bh;
+    el.style.backgroundColor = '#' + hex(fr) + hex(fg) + hex(fb);
 
     return dir;
 }
 
 function show(c, r, l) {
+    var col = rgb(l);
+    var str = '(' + col.r + ', ' + col.g + ', ' + col.b + ')';
+
     document.getElementById('xcoord').innerHTML = c[0];
     document.getElementById('ycoord').innerHTML = c[1];
     document.getElementById('radius').innerHTML = r;
     document.getElementById('current-color').innerHTML = l;
+    document.getElementById('rgb-color').innerHTML = str;
+}
+
+function rgb(val) {
+    var num = val.split('#')[1];
+    var r = parseInt(num.slice(0,2), 16);
+    var g = parseInt(num.slice(2,4), 16);
+    var b = parseInt(num.slice(4,6), 16);
+    return {r: r, g: g, b: b};
 }
 
 function hex(val) {
@@ -135,7 +129,6 @@ function smooth_hex(start) {
     var b = parseInt(hex_split.slice(4,6), 16);
     var dir = (Math.floor(Math.random() * 2) === 1) ? 1 : -1;
     var dlt = dir * Math.floor(Math.random() * SMOOTHING);
-    var rbg_string;    
 
     switch (Math.floor(Math.random() * 3)) {
         case 0:
@@ -154,9 +147,6 @@ function smooth_hex(start) {
             }
             break;
     }
-
-    rgb_string = '(' + r + ', ' + g + ', ' + b + ')';
-    document.getElementById('rgb-color').innerHTML = rgb_string;
 
     return '#' + hex(r) + hex(g) + hex(b);
 }
