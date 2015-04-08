@@ -141,13 +141,13 @@ function pulse(el, to, dir) {
  * @param l:    Color (hex)
  */
 function show(c, r, l) {
-    var col = rgb(l);
+    var col = l.rgb();
     var str = '(' + col.r + ', ' + col.g + ', ' + col.b + ')';
 
     document.getElementById('xcoord').innerHTML = c[0];
     document.getElementById('ycoord').innerHTML = c[1];
     document.getElementById('radius').innerHTML = r;
-    document.getElementById('current-color').innerHTML = l;
+    document.getElementById('current-color').innerHTML = l.hex();
     document.getElementById('rgb-color').innerHTML = str;
 }
 
@@ -237,17 +237,19 @@ function smooth_hex(start) {
     var playing = (pause_button.value === 'true');
 
     var start = 0;
-    var color = random_hex();
+    var color = new Pallete();
     var rad = RADIUS;
     var pulse_dir = [-1, -1, -1];
     var interval = Math.PI * 2 / MS_TIME;
     var coord = [ctx.canvas.clientWidth / 2, ctx.canvas.clientHeight / 2];
 
+    color.generateRandom();
+
     ctx.canvas.width = ctx.canvas.clientWidth;
     ctx.canvas.height = ctx.canvas.clientHeight;
     ctx.lineWidth = LINE;
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
+    ctx.strokeStyle = color.hex();
+    ctx.fillStyle = color.hex();
 
     color_checkbox.onclick = function () {
         change_color = this.checked;
@@ -279,7 +281,7 @@ function smooth_hex(start) {
                 start = spin_draw(ctx, rad, coord, start, interval);
 
                 if (start > Math.PI * 2) {
-                    color = random_hex();
+                    color.generateRandom();
                     start = 0;
                 }
             } else {
@@ -295,16 +297,16 @@ function smooth_hex(start) {
             
             if (change_color) {
                 if (smooth_color) {
-                    color = smooth_hex(color);
+                    color.generateSmooth();
                 } else {
-                    color = random_hex();
+                    color.generateRandom();
                 }
             }
 
-            ctx.strokeStyle = color;
-            ctx.fillStyle = color;
+            ctx.strokeStyle = color.hex();
+            ctx.fillStyle = color.hex();
         } else {
-            pulse_dir = pulse(pause_button, color, pulse_dir);
+            pulse_dir = pulse(pause_button, color.hex(), pulse_dir);
         }
     }, interval);
 
