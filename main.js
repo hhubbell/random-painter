@@ -12,7 +12,9 @@
  * @param c:        Array of coordinates ([x, y])
  * @param start:    Last iteration's end point
  * @param distance: Arc length (radians)
- * @return:         Total arc length (radians) 
+ * @return:         Total arc length (radians)
+ *
+ * XXX DEPRECIATED
  */
 function spin_draw(ctx, r, c, start, distance) {
     var x = c[0];
@@ -36,6 +38,8 @@ function spin_draw(ctx, r, c, start, distance) {
  * @param ctx:  The context to draw on
  * @param r:    Circle radius
  * @param c:    Array of coordinates ([x, y])
+ *
+ * XXX DEPRECIATED
  */
 function solid_draw(ctx, r, c) {
     var x = c[0];
@@ -54,6 +58,8 @@ function solid_draw(ctx, r, c) {
  * @param old:          Current location
  * @optional no_neg:    Is the circle allowed to be drawn off the canvas
  * @return:             New coordinates ([x, y])
+ *
+ * XXX DEPRECIATED
  */
 function move(ctx, r, old, no_neg) {
     var newc = [];
@@ -77,6 +83,8 @@ function move(ctx, r, old, no_neg) {
  * size: randomly generate the circle radius
  * @param max:  Max radius
  * @return:     New radius
+ *
+ * XXX DEPRECIATED
  */
 function size(max) {
     return Math.floor(Math.random() * max)
@@ -155,6 +163,8 @@ function show(c, r, l) {
  * rgb: Convert a hexidecimal color value to an RGB array
  * @param val:  Hexidecimal color string
  * @return:     RGB color dictionary
+ *
+ * XXX DEPRECIATED
  */
 function rgb(val) {
     var num = val.split('#')[1];
@@ -168,6 +178,8 @@ function rgb(val) {
  * hex: Convert an integer between 0 and 255 to its hexidecimal val
  * @param val:  Color integer
  * @return:     Hexidecimal value
+ *
+ * XXX DEPRECIATED
  */
 function hex(val) {
     var hex_rep = val.toString(16);
@@ -177,6 +189,8 @@ function hex(val) {
 /**
  * random_hex: generate a random hexidecimal color.
  * @return:     Hexidecimal value
+ *
+ * XXX DEPRECIATED
  */
 function random_hex() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -186,6 +200,8 @@ function random_hex() {
  * smooth_hex: generate a hexidecimal color based on a seed.
  * @param start:    Start color to base next color on
  * @return:         New hexidecimal value
+ *
+ * XXX DEPRECIATED
  */
 function smooth_hex(start) {
     var SMOOTHING = 5;
@@ -238,20 +254,14 @@ function smooth_hex(start) {
 
     var start = 0;
     var coord = [ctx.canvas.clientWidth / 2, ctx.canvas.clientHeight / 2];
-    var color = new Pallete();
-    var brush = new CircleBrush(ctx, coord, LINE, RADIUS);
-    //var rad = RADIUS;
     var pulse_dir = [-1, -1, -1];
     var interval = Math.PI * 2 / MS_TIME;
 
+    var color = new Pallete();
+    var brush = new CircleBrush(ctx, coord, LINE, RADIUS);
+
     color.generateRandom();
     brush.setColor(color.hex());
-    
-    //ctx.canvas.width = ctx.canvas.clientWidth;
-    //ctx.canvas.height = ctx.canvas.clientHeight;
-    //ctx.lineWidth = LINE;
-    //ctx.strokeStyle = color.hex();
-    //ctx.fillStyle = color.hex();
 
     color_checkbox.onclick = function () {
         change_color = this.checked;
@@ -280,7 +290,6 @@ function smooth_hex(start) {
     window.setInterval(function () {
         if (playing) {
             if (do_spin) {
-                //start = spin_draw(ctx, rad, coord, start, interval);
                 start = brush.spinDraw(start, interval);
                 
                 if (start > Math.PI * 2) {
@@ -288,16 +297,13 @@ function smooth_hex(start) {
                     start = 0;
                 }
             } else {
-                //solid_draw(ctx, rad, coord);
                 brush.draw();
             }
 
             show(brush.coord, brush.radius, color);
-            //coord = move(ctx, RADIUS, coord, true);
             brush.move()
             
             if (change_size) {
-                //rad = size(RADIUS);
                 brush.randomResize(RADIUS);
             }
             
@@ -309,10 +315,7 @@ function smooth_hex(start) {
                 }
             }
 
-            //ctx.strokeStyle = color.hex();
-            //ctx.fillStyle = color.hex();
             brush.setColor(color.hex());
-            
         } else {
             pulse_dir = pulse(pause_button, color.hex(), pulse_dir);
         }
