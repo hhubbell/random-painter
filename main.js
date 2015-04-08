@@ -237,19 +237,21 @@ function smooth_hex(start) {
     var playing = (pause_button.value === 'true');
 
     var start = 0;
+    var coord = [ctx.canvas.clientWidth / 2, ctx.canvas.clientHeight / 2];
     var color = new Pallete();
-    var rad = RADIUS;
+    var brush = new CircleBrush(ctx, coord, LINE, RADIUS);
+    //var rad = RADIUS;
     var pulse_dir = [-1, -1, -1];
     var interval = Math.PI * 2 / MS_TIME;
-    var coord = [ctx.canvas.clientWidth / 2, ctx.canvas.clientHeight / 2];
 
     color.generateRandom();
-
-    ctx.canvas.width = ctx.canvas.clientWidth;
-    ctx.canvas.height = ctx.canvas.clientHeight;
-    ctx.lineWidth = LINE;
-    ctx.strokeStyle = color.hex();
-    ctx.fillStyle = color.hex();
+    brush.setColor(color.hex());
+    
+    //ctx.canvas.width = ctx.canvas.clientWidth;
+    //ctx.canvas.height = ctx.canvas.clientHeight;
+    //ctx.lineWidth = LINE;
+    //ctx.strokeStyle = color.hex();
+    //ctx.fillStyle = color.hex();
 
     color_checkbox.onclick = function () {
         change_color = this.checked;
@@ -278,21 +280,25 @@ function smooth_hex(start) {
     window.setInterval(function () {
         if (playing) {
             if (do_spin) {
-                start = spin_draw(ctx, rad, coord, start, interval);
-
+                //start = spin_draw(ctx, rad, coord, start, interval);
+                start = brush.spinDraw(start, interval);
+                
                 if (start > Math.PI * 2) {
                     color.generateRandom();
                     start = 0;
                 }
             } else {
-                solid_draw(ctx, rad, coord);
+                //solid_draw(ctx, rad, coord);
+                brush.draw();
             }
 
-            show(coord, rad, color);
-            coord = move(ctx, RADIUS, coord, true);
-
+            show(brush.coord, brush.radius, color);
+            //coord = move(ctx, RADIUS, coord, true);
+            brush.move()
+            
             if (change_size) {
-                rad = size(RADIUS);
+                //rad = size(RADIUS);
+                brush.randomResize(RADIUS);
             }
             
             if (change_color) {
@@ -303,8 +309,10 @@ function smooth_hex(start) {
                 }
             }
 
-            ctx.strokeStyle = color.hex();
-            ctx.fillStyle = color.hex();
+            //ctx.strokeStyle = color.hex();
+            //ctx.fillStyle = color.hex();
+            brush.setColor(color.hex());
+            
         } else {
             pulse_dir = pulse(pause_button, color.hex(), pulse_dir);
         }
