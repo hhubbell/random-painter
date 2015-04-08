@@ -243,6 +243,8 @@ function smooth_hex(start) {
     var interval = Math.PI * 2 / MS_TIME;
     var coord = [ctx.canvas.clientWidth / 2, ctx.canvas.clientHeight / 2];
 
+    ctx.canvas.width = ctx.canvas.clientWidth;
+    ctx.canvas.height = ctx.canvas.clientHeight;
     ctx.lineWidth = LINE;
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
