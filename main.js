@@ -76,6 +76,20 @@ function show(c, r, l) {
 }
 
 /**
+ * rgb: Convert a hexidecimal color value to an RGB array
+ * @param val:  Hexidecimal color string
+ * @return:     RGB color dictionary
+ *
+ */
+function rgb(val) {
+    var num = val.split('#')[1];
+    var r = parseInt(num.slice(0,2), 16);
+    var g = parseInt(num.slice(2,4), 16);
+    var b = parseInt(num.slice(4,6), 16);
+    return {r: r, g: g, b: b};
+}
+
+/**
  * hex: Convert an integer between 0 and 255 to its hexidecimal val
  * @param val:  Color integer
  * @return:     Hexidecimal value
