@@ -5,90 +5,6 @@
  * Description: Control the brush of the random painter
  */
 
-/**
- * spin_draw: Stamp a circle on the canvas that is opening.
- * @param ctx:      The context to draw on
- * @param r:        Cirle radius
- * @param c:        Array of coordinates ([x, y])
- * @param start:    Last iteration's end point
- * @param distance: Arc length (radians)
- * @return:         Total arc length (radians)
- *
- * XXX DEPRECIATED
- */
-function spin_draw(ctx, r, c, start, distance) {
-    var x = c[0];
-    var y = c[1];
-    var end = start + distance;
-
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + r, y);
-    ctx.arc(x, y, r, 0, end);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    ctx.fill();
-    ctx.closePath();
-
-    return end;
-}
-
-/**
- * solid_draw: Stamp a solid circle on the canvas
- * @param ctx:  The context to draw on
- * @param r:    Circle radius
- * @param c:    Array of coordinates ([x, y])
- *
- * XXX DEPRECIATED
- */
-function solid_draw(ctx, r, c) {
-    var x = c[0];
-    var y = c[1];
-
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.closePath();
-}
-
-/**
- * move: randomly generate the new location for the circle
- * @param ctx:          The context
- * @param r:            Circle radius
- * @param old:          Current location
- * @optional no_neg:    Is the circle allowed to be drawn off the canvas
- * @return:             New coordinates ([x, y])
- *
- * XXX DEPRECIATED
- */
-function move(ctx, r, old, no_neg) {
-    var newc = [];
-
-    newc[0] = old[0] + ((Math.floor(Math.random() * 2) === 1) ? 1 : -1);
-    newc[1] = old[1] + ((Math.floor(Math.random() * 2) === 1) ? 1 : -1);
-
-    if (no_neg) {
-        if (newc[0] + r >= ctx.canvas.clientWidth || newc[0] - r <= 0) {
-            newc[0] = old[0];
-        }
-
-        if (newc[1] + r >= ctx.canvas.clientHeight || newc[1] - r <= 0) {
-            newc[1] = old[1];
-        }
-    }
-    return newc;
-}
-
-/**
- * size: randomly generate the circle radius
- * @param max:  Max radius
- * @return:     New radius
- *
- * XXX DEPRECIATED
- */
-function size(max) {
-    return Math.floor(Math.random() * max)
-}
 
 /**
  * pulse: Change the background color of an element from white
@@ -160,80 +76,14 @@ function show(c, r, l) {
 }
 
 /**
- * rgb: Convert a hexidecimal color value to an RGB array
- * @param val:  Hexidecimal color string
- * @return:     RGB color dictionary
- *
- * XXX DEPRECIATED
+ * selectBrush: Select the brush type to use
+ * @param val:      Value of selection
+ * @param ctx:      Canvas context
+ * @param coord:    Location for the brush
+ * @param stroke:   Stroke width
+ * @param rad:      Brush radius (for circle brushes)
+ * @return:         New brush instance
  */
-function rgb(val) {
-    var num = val.split('#')[1];
-    var r = parseInt(num.slice(0,2), 16);
-    var g = parseInt(num.slice(2,4), 16);
-    var b = parseInt(num.slice(4,6), 16);
-    return {r: r, g: g, b: b};
-}
-
-/**
- * hex: Convert an integer between 0 and 255 to its hexidecimal val
- * @param val:  Color integer
- * @return:     Hexidecimal value
- *
- * XXX DEPRECIATED
- */
-function hex(val) {
-    var hex_rep = val.toString(16);
-    return (hex_rep.length === 1) ? '0' + hex_rep : hex_rep;
-}
-
-/**
- * random_hex: generate a random hexidecimal color.
- * @return:     Hexidecimal value
- *
- * XXX DEPRECIATED
- */
-function random_hex() {
-    return '#' + Math.floor(Math.random() * 16777215).toString(16);
-}
-
-/**
- * smooth_hex: generate a hexidecimal color based on a seed.
- * @param start:    Start color to base next color on
- * @return:         New hexidecimal value
- *
- * XXX DEPRECIATED
- */
-function smooth_hex(start) {
-    var SMOOTHING = 5;
-
-    var hex_split = start.split('#')[1];
-    var r = parseInt(hex_split.slice(0,2), 16);
-    var g = parseInt(hex_split.slice(2,4), 16);
-    var b = parseInt(hex_split.slice(4,6), 16);
-    var dir = (Math.floor(Math.random() * 2) === 1) ? 1 : -1;
-    var dlt = dir * Math.floor(Math.random() * SMOOTHING);
-
-    switch (Math.floor(Math.random() * 3)) {
-        case 0:
-            if (r + dlt <= 255 && r + dlt >= 0) {
-                r += dlt;
-            }
-            break;
-        case 1:
-            if (g + dlt <= 255 && g + dlt >= 0) {
-                g += dlt;
-            }
-            break;
-        case 2:
-            if (b + dlt <= 255 && b + dlt >= 0) {
-                b += dlt;
-            }
-            break;
-    }
-
-    return '#' + hex(r) + hex(g) + hex(b);
-}
-
 function selectBrush(val, ctx, coord, stroke, rad) {
     var brush;
     
