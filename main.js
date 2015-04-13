@@ -234,11 +234,30 @@ function smooth_hex(start) {
     return '#' + hex(r) + hex(g) + hex(b);
 }
 
+function selectBrush(val, ctx, coord, stroke, rad) {
+    var brush;
+    
+    switch (val) {
+    case 'circle-brush':
+        brush = new CircleBrush(ctx, coord, stroke, rad);
+        break;
+    case 'linear-brush':
+        brush = new LinearBrush(ctx, coord, stroke);
+        break;
+    default:
+        brush = new Brush(ctx, coord, stroke);
+        break;
+    }
+
+    return brush
+}
+
 (function () {
     var MS_TIME = 500;
     var RADIUS = 25;
     var LINE = 2;
 
+    var brush_select = document.getElementById('brush');
     var color_checkbox = document.getElementById('color');
     var smooth_checkbox = document.getElementById('smooth');
     var size_checkbox = document.getElementById('resize');
@@ -258,10 +277,14 @@ function smooth_hex(start) {
     var interval = Math.PI * 2 / MS_TIME;
 
     var color = new Pallete();
-    var brush = new CircleBrush(ctx, coord, LINE, RADIUS);
+    var brush = selectBrush(brush_select.value, ctx, coord, LINE, RADIUS);
 
     color.generateRandom();
     brush.setColor(color.hex());
+
+    brush_select.onchange = function () {
+        brush = selectBrush(this.value, ctx, coord, LINE, RADIUS);
+    }
 
     color_checkbox.onclick = function () {
         change_color = this.checked;
