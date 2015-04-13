@@ -76,6 +76,17 @@ function show(c, r, l) {
 }
 
 /**
+ * hex: Convert an integer between 0 and 255 to its hexidecimal val
+ * @param val:  Color integer
+ * @return:     Hexidecimal value
+ *
+ */
+function hex(val) {
+    var hex_rep = val.toString(16);
+    return (hex_rep.length === 1) ? '0' + hex_rep : hex_rep;
+}
+
+/**
  * selectBrush: Select the brush type to use
  * @param val:      Value of selection
  * @param ctx:      Canvas context
